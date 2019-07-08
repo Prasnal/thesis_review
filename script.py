@@ -29,14 +29,10 @@ def send_email(reviews):
     server.quit()
 
 def get_review():
-    #url = 'https://misio.ftj.agh.edu.pl/core/signin'
 
-    #r=requests.post(url=url, data=cfg.misio, verify=False)  
+    url = 'https://misio.ftj.agh.edu.pl/opm/acceptedlist/?name=2017/18'                                
+    msc_list=requests.post(url, verify=False)
 
-    url2 = 'https://misio.ftj.agh.edu.pl/opm/acceptedlist/?name=2017/18'                                
-
-    msc_list=requests.post(url=url2, verify=False)
-    print(msc_list.text)
     soup = BeautifulSoup(msc_list.text, 'html.parser')
     result = [i.find_all('td') for i in soup.find_all('tr') if cfg.personal_data in str(i)][0]
     reviews = [i.text for i in result[3].find_all() if 'Recenzja' in str(i)]
@@ -44,10 +40,9 @@ def get_review():
     if len(reviews)>cfg.reviews_number:
         send_email(reviews)
 
-get_review()
-'''
+
 schedule.every(1).minutes.do(get_review)
 while True:
     schedule.run_pending()
     time.sleep(1)
-'''
+
