@@ -39,6 +39,7 @@ def get_review():
 
     if len(reviews)>cfg.reviews_number:
         send_email(reviews)
+        break
 
 
 schedule.every(1).minutes.do(get_review)
